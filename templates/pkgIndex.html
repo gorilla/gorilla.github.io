@@ -1,0 +1,23 @@
+{{define "body"}}
+  {{with .pkgs}}
+    <h1>Packages</h3>
+    <table class="table table-condensed">
+    <thead><tr><th>Name</th><th>Synopsis</th></tr></thead>
+    <tbody>{{range .}}<tr><td><a href="/pkg/{{.ShortPath|html}}">{{.ShortPath|importPath}}</a><td>{{.Synopsis|html}}</td></tr>{{end}}</tbody>
+    </table>
+  {{end}}
+
+  {{with .cmds}}
+    <h3 id="commands">Commands</h3>
+    <table class="table table-condensed">
+    <thead><tr><th>Path</th><th>Synopsis</th></tr></thead>
+    <tbody>{{range .}}<tr><td><a href="/pkg/{{.ShortPath|html}}">{{.ImportPath|importPath}}</a><td>{{.Synopsis|html}}</td></tr>{{end}}</tbody>
+    </table>
+  {{end}}
+{{end}}
+
+{{define "title"}}Packages - Gorilla, the golang web toolkit{{end}}
+
+{{define "extrahead"}}{{end}}
+
+{{define "extrabody"}}{{end}}

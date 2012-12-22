@@ -1,0 +1,54 @@
+{{define "base"}}<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{template "title" .}}</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" media="screen, projection" href="/static/styles/screen.css">
+    {{template "extrahead" .}}
+  </head>
+  <body>
+    <header>
+      <h1><a href="/">Gorilla <span>web toolkit</span></a></h1>
+      <nav>
+        <ul>
+          <li{{if eq .Section "home"}} class="active"{{end}}>
+            <a href="/" title="home of the fearless gorilla, the golang web toolkit">Home</a>
+          </li>
+          <li{{if eq .Section "pkg"}} class="active"{{end}}>
+            <a href="/pkg/" title="api documentation">Packages</a>
+          </li>
+          <li>
+            <a href="https://github.com/gorilla/" title="repository and issue tracker">Source</a>
+          </li>
+          <li>
+            <a href="https://groups.google.com/group/gorilla-web" title="mailing list">Discussion</a>
+          </li>
+          <li>
+            <a href="https://plus.google.com/116448763101158824911/posts" title="google+ page">News</a>
+          </li>
+          {{/*<li{{if eq .Section "src"}} class="active"{{end}}>
+            <a href="/src/" title="code repository and issue tracker">Source</a>
+          </li>
+          <li{{if eq .Section "people"}} class="active"{{end}}>
+            <a href="/people" title="community links">People</a>
+          </li>*/}}
+        </ul>
+      </nav>
+    </header>
+    <div role="main" class="main">
+      {{template "body" .}}
+    </div>
+    <footer>
+      <p>
+        Hosting by <a href="http://code.google.com/appengine/">Google App Engine</a>.
+        Docs by <a href="http://go.pkgdoc.org/">GoPkgDoc</a>.
+        Gorilla font by <a href="https://plus.google.com/107807505287232434305/about">Vernon Adams</a>.
+        Gorilla icon by <a href="http://www.graphics-and-desktop-icons.com/">Martin Bérubé</a>.
+      </p>
+      <div class="g-plusone" data-size="small" data-annotation="none"></div>
+    </footer>
+    <script src="/static/scripts/external.js"></script>
+    {{template "extrabody" .}}
+  </body>
+</html>
+{{end}}

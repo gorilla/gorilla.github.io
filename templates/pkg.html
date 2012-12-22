@@ -1,0 +1,143 @@
+{{define "body"}}
+  {{with .pdoc}}
+    <div id="gorilladoc">
+    <h1 id="generatedHeader">{{if .IsCmd}}Command {{.|commandName}}{{else}}{{if .Name}}package {{.Name|html}}{{end}}{{end}}</h1>
+    {{if .Errors}}<div class="alert alert-error alert-block">{{range .Errors}}<p><strong>Error:</strong> {{.|html}}{{end}}</div>{{end}}
+
+    {{if .IsCmd}}
+      {{.Doc|comment}}
+    {{else}}
+      {{if .Name}}
+        <p><code>import "{{.ImportPath|html}}"</code></p>
+        <p>
+          <a href="#installation">Installation</a> | <a href="#overview">Overview</a> | <a href="#api">API</a> | <a href="#files">Files</a>
+          {{if or $.pkgs $.cmds}} | <a href="#subdirs">Subdirectories</a>{{end}}
+        </p>
+
+        <a name="installation"></a>
+        <h2>Installation</h2>
+        <p><code>$ go get {{.ImportPath|html}}</code></p>
+
+        <h2 id="overview">Overview</h2>
+        {{.Doc|comment}}
+        {{template "Examples" .}}
+
+        <h2 id="api">API</h2>
+        <div style="-webkit-column-count: 2; -moz-column-count: 2; column-count: 2; " id="nav">
+          <ul style="-webkit-margin-before: 0; -webkit-margin-after: 0;">
+            {{if .Consts}}<li><a href="#constants">Constants</a>{{end}}
+            {{if .Vars}}<li><a href="#variables">Variables</a>{{end}}
+            {{range .Funcs}}<li><a href="#{{.Name}}" title="{{.Decl.Text|html}}">func {{.Name|html}}</a>{{template "ExampleLinks" .}}{{end}}
+            {{range $t := .Types}}
+              <li><a href="#{{.Name|html}}">type {{.Name|html}}</a>{{template "ExampleLinks" .}}
+                  {{if or .Funcs .Methods}}<ul>{{end}}
+                    {{range .Funcs}}<li><a href="#{{.Name|html}}" title="{{.Decl.Text|html}}">func {{.Name|html}}</a>{{template "ExampleLinks" .}}{{end}}
+                    {{range .Methods}}<li><a href="#{{$t.Name|html}}.{{.Name|html}}" title="{{.Decl.Text|html}}">func ({{.Recv|html}}) {{.Name|html}}</a>{{template "ExampleLinks" .}}{{end}}
+                  {{if or .Funcs .Methods}}</ul>{{end}}
+              {{end}}
+          </ul>
+        </div>
+
+        <h2 id="files">Package Files</h3>
+        <ul>{{range .Files}}<li>{{template "SourceLink" .}}</li>{{end}}</ul>
+
+        {{if .Consts}}<h3 id="constants">Constants</h3>{{range .Consts}}<pre>{{.Decl|decl}}</pre>{{.Doc|comment}}{{end}}{{end}}
+        {{if .Vars}}<h3 id="variables">Variables</h3>{{range .Vars}}<pre>{{.Decl|decl}}</pre>{{.Doc|comment}}{{end}}{{end}}
+
+        {{range .Funcs}}
+          <h3 id="{{.Name|html}}">func {{template "SourceLink" .}}</h3>
+          <p><code>{{.Decl|decl}}</code></p>{{.Doc|comment}}
+          {{template "Examples" .}}
+        {{end}}
+
+        {{range $t := .Types}}
+          <h3 id="{{.Name|html}}">type {{template "SourceLink" .}}</h3>
+          <pre>{{.Decl|decl}}</pre>{{.Doc|comment}}
+          {{range .Consts}}<pre>{{.Decl|decl}}</pre>{{.Doc|comment}}{{end}}
+          {{range .Vars}}<pre>{{.Decl|decl}}</pre>{{.Doc|comment}}{{end}}
+          {{template "Examples" .}}
+
+          {{range .Funcs}}
+            <h4 id="{{.Name|html}}">func {{template "SourceLink" . }}</h4>
+            <p><code>{{.Decl|decl}}</code></p>{{.Doc|comment}}
+            {{template "Examples" .}}
+          {{end}}
+
+          {{range .Methods}}
+            <h4 id="{{$t.Name|html}}.{{.Name|html}}">func ({{.Recv|html}}) {{template "SourceLink" .}}</h4>
+            <p><code>{{.Decl|decl}}</code></p>{{.Doc|comment}}
+            {{template "Examples" .}}
+          {{end}}
+
+        {{end}}{{/* range .Types */}}
+      {{end}}{{/* if .Name */}}
+    {{end}}{{/* if .IsCmd */}}
+
+    {{if or $.pkgs $.cmds}}{{if .Name}}<h3 id="subdirs">Subdirectories</h3>{{end}}
+      {{with $.pkgs}}
+        <h4>Packages</h4>
+        <table class="table table-condensed">
+        <thead><tr><th>Path</th><th>Synopsis</th></tr></thead>
+        <tbody>{{range .}}<tr><td><a href="/pkg/{{.ShortPath|html}}">{{relativePath .ImportPath $.pdoc.ImportPath}}</a><td>{{.Synopsis|html}}</td></tr>{{end}}</tbody>
+        </table>
+      {{end}}
+      {{with $.cmds}}
+        <h4>Commands</h4>
+        <table class="table table-condensed">
+        <thead><tr><th>Path</th><th>Synopsis</th></tr></thead>
+        <tbody>{{range .}}<tr><td><a href="/pkg/{{.ShortPath|html}}">{{relativePath .ImportPath $.pdoc.ImportPath}}</a><td>{{.Synopsis|html}}</td></tr>{{end}}</tbody>
+        </table>
+      {{end}}
+    {{end}}
+    </div>
+  {{end}}
+{{end}}
+
+{{define "SourceLink"}}{{if .URL}}<a href="{{.URL|html}}">{{.Name|html}}</a>{{else}}{{.Name|html}}{{end}}{{end}}
+
+{{define "ExampleLinks"}}{{range .Examples}} <a href="#example_{{.Name|html}}" title="Go to example" onclick="show('{{.Name|html}}')">☞ </a>{{end}}{{end}}
+
+{{define "Examples"}}
+  {{range .Examples}}
+    <p><a id="example_{{.Name|html}}" href="javascript:ex('{{.Name|html}}');">☞ <i>Example</i></a>
+    <div id="d_{{.Name|html}}" style="display:none;" class="ex">
+      {{with .Doc}}<p>{{.|comment}}{{end}}
+      {{if .Output}}<p>Code:{{end}}
+      <pre>{{.Code|html}}</pre>
+      {{with .Output}}<p>Output:<pre>{{.|html}}</pre>{{end}}
+    </div>
+  {{end}}
+{{end}}
+
+{{define "title"}}{{with .pdoc}}{{if .IsCmd}}{{.|commandName}}{{else}}{{.Name|html}} - Gorilla, the golang web toolkit{{end}}{{end}}{{end}}
+
+{{define "extrahead"}}
+  {{with .pdoc}}
+    <meta name="go-import" content="gorillatoolkit.org/pkg/{{.Name|html}} git https://github.com/gorilla/{{.Name|html}}">
+
+    {{if .Synopsis}}<meta name="description" content="{{.ProjectName|html}}: {{.Synopsis|html}}">{{end}}
+    <script language="javascript">
+      function show(id) {
+        var a = document.getElementById("example_" + id);
+        var d = document.getElementById("d_" + id);
+        d.style.display = "block";
+        a.innerHTML = "☟ <i>Example</i>";
+      }
+      function ex(id) {
+        var a = document.getElementById("example_" + id);
+        var d = document.getElementById("d_" + id);
+        if (d.style.display === "block") {
+          d.style.display = "none";
+          a.innerHTML = "☞ <i>Example</i>";
+        } else {
+          d.style.display = "block";
+          a.innerHTML = "☟ <i>Example</i>";
+        }
+      }
+    </script>
+  {{end}}
+{{end}}
+
+{{define "extrabody"}}
+  <script src="/static/scripts/godocs.js"></script>
+{{end}}

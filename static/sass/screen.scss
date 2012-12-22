@@ -1,0 +1,297 @@
+@import url(http://fonts.googleapis.com/css?family=Paytone+One|PT+Sans:400,700,400italic);
+
+@import 'compass/css3/border-radius';
+@import "compass/css3/images";
+@import 'compass/css3/text-shadow';
+
+$logo-color-1: #FFBB00;
+$logo-color-2: #CCC;
+$logo-color-1-hover: #FFC933;
+$logo-color-2-hover: #E6E6E6;
+
+$title-color: $logo-color-1;
+
+$text-color-1: #CCC;
+$text-color-2: #808080;
+$text-color-3: #F2F2F2;
+
+$link-color: #99DDFF;
+$link-hover: #66CCFF;
+
+$background-color-1: #1A1A1A;
+$background-color-2: #333;
+$background-color-3: #262626;
+$background-color-4: #404040;
+$background-color-5: #666;
+
+$logo-font: 'Paytone One', sans-serif;
+$title-font: $logo-font;
+$text-font: 'PT Sans', helvetica, arial, sans-serif;
+$code-font: 'Consolas', 'Deja Vu Sans Mono', 'Lucida Console', 'Bitstream Vera Sans Mono', monospace;
+
+/* General ------------------------------------------------------------------*/
+body {
+  background: $background-color-1;
+  color: $text-color-1;
+  font-family: $text-font;
+  font-size: 16px;
+  font-weight: 400;
+  margin: 0;
+  padding: 0;
+}
+a:link, a:visited {
+  color: $link-color;
+}
+a:active, a:hover {
+  color: $link-hover;
+}
+em {
+  font-style: italic;
+}
+strong {
+  font-weight: 700;
+}
+aside, footer, header, section {
+  display: block;
+}
+
+/* Header -------------------------------------------------------------------*/
+header {
+  margin: 0 auto;
+  padding: 0;
+  text-align: center;
+  width: 740px;
+}
+
+header h1 {
+  display: inline-block;
+  *display: inline;
+  background: transparent url(/static/images/gorilla-icon-64.png) no-repeat 0 10px;
+  color: $logo-color-1;
+  font-family: $logo-font;
+  font-size: 64px;
+  font-weight: 400;
+  line-height: 1em;
+  margin: 0;
+  padding: 0 0 20px 74px;
+  zoom: 1;
+  @include text-shadow(#080808 -3px 3px 0);
+}
+header h1 a:link, header h1 a:visited {
+  text-decoration: none;
+  color: $logo-color-1;
+}
+header h1 a:hover, header h1 a:active {
+  color: $logo-color-1-hover;
+}
+header h1 a:link span, header h1 a:visited span {
+  color: $logo-color-2;
+}
+header h1 a:hover span, header h1 a:active span {
+  color: $logo-color-2-hover;
+}
+
+header nav ul {
+  border-top: 3px solid $background-color-2;
+  font-size: 14px;
+  margin: 0 0 25px;
+  text-align: right;
+  text-transform: lowercase;
+}
+header nav li {
+  display: inline-block;
+  *display: inline;
+  margin: 0 0 0 3px;
+  padding: 0;
+  zoom: 1;
+}
+header nav li a {
+  display: inline-block;
+  *display: inline;
+  zoom: 1;
+}
+header nav a:link, header nav a:visited {
+  background: $background-color-3;
+  color: $text-color-2;
+  padding: 7px;
+  text-decoration: none;
+  @include border-radius(0 0 3px 3px);
+}
+header nav a:hover, header nav a:active, header nav li.active a {
+  //background: $background-color-2;
+  color: $text-color-1;
+  @include background-image(linear-gradient($background-color-2, $background-color-5));
+}
+
+/* Main ---------------------------------------------------------------------*/
+.main {
+  line-height: 1.6em;
+  width: 740px;
+  margin: 0 auto;
+}
+.main h1, .main h2, .main h3, .main h4 {
+  color: $title-color;
+  font-family: $title-font;
+  font-weight: 400;
+  @include text-shadow(#080808 -2px 2px 0);
+}
+.main h2 {
+  border-top: 1px dashed $background-color-2;
+  padding-top: 12px;
+}
+
+/* Footer -------------------------------------------------------------------*/
+footer {
+  color: $text-color-2;
+  border-top: 3px solid $background-color-2;
+  font-size: 13px;
+  margin: 25px auto;
+  padding: 0;
+  text-align: center;
+  width: 740px;
+}
+
+/* 404 ----------------------------------------------------------------------*/
+.error {
+  margin: 100px auto 0;
+  width: 500px;
+  text-align: center;
+}
+.error h1 {
+  color: $logo-color-1;
+  font-family: $logo-font;
+  font-size: 48px;
+  font-weight: 400;
+  line-height: 1em;
+  margin: 0;
+  padding: 0;
+  @include text-shadow(#080808 -3px 3px 0);
+}
+
+/* Content and Code Highlighting --------------------------------------------*/
+code, pre {
+  border-left: 3px solid $title-color;
+  color: $text-color-3;
+  font-family: $code-font;
+  font-size: 14px;
+  line-height: 1.6em;
+  overflow: auto;
+  padding: 10px;
+  @include background-image(linear-gradient(left, $background-color-4, $background-color-1));
+}
+code {
+  display: inline-block;
+  *display: inline;
+  zoom: 1;
+}
+span.ln {
+  font-size: 12px;
+  color: #777777;
+}
+span.comment {
+  color: #002090;
+  color: #808080;
+  color: #FFE499;
+}
+span.highlight {
+  background: #FF9900;
+  font-weight: 700;
+}
+span.highlight-comment {
+  background: #FF9900;
+  font-weight: 700;
+  color: #002090;
+}
+span.selection {
+  background: #FFFF00;
+  background: $logo-color-1;
+  color: $background-color-1;
+}
+span.selection-comment {
+  color: #002090;
+  background: #FFFF00
+}
+span.selection-highlight {
+  background: #FF9900;
+  font-weight: 700;
+}
+span.selection-highlight-comment {
+  background: #FF9900;
+  font-weight: 700;
+  color: #002090;
+}
+span.alert {
+  color: #D00000;
+}
+#nav table, table.layout {
+  width: 100%;
+  font-size: 14px;
+}
+#nav table dt a {
+  //font-weight: 700;
+  //color: $link-hover;
+}
+#nav table dd {
+  margin: 0 0 0 2em;
+}
+/*
+#nav table a:link, #nav table a:visited {
+  text-decoration: none;
+}
+#nav table a:hover, #nav table a:active {
+  text-decoration: underline;
+}
+*/
+#nav table td, table.layout td {
+  vertical-align: top;
+}
+#nav table, #nav {
+  border-collapse:collapse;
+  border-top: 3px solid $logo-color-1;
+  border-bottom: 1px solid $logo-color-1;
+}
+#nav table td {
+  width: 50%;
+  padding: 0 1em;
+  @include background-image(linear-gradient(left, #262626, $background-color-1));
+}
+#nav {
+  //@include background-image(linear-gradient(left, #262626, $background-color-1));
+  background: #262626;
+  padding: 20px 0;
+}
+
+#nav table td.first {
+}
+.navtop a {
+  color: $background-color-4;
+  //font-family: $text-font;
+  font-size: 13px;
+  font-weight: 400 !important;
+  float: right;
+  text-decoration: none;
+  @include text-shadow(none);
+}
+.navtop a:hover {
+  color: $text-color-1;
+}
+#gorilladoc h1 {
+  margin-bottom: 30px;
+}
+#gorilladoc h2, #gorilladoc h3, #gorilladoc h4, #gorilladoc h5, #gorilladoc h6 {
+  border-top: 1px dashed $background-color-2;
+  font-family: $code-font;
+  padding-top: 16px;
+  @include text-shadow(#080808 -2px 2px 0);
+}
+
+table td, table th {
+  border-top: 1px dashed $background-color-2;
+  padding: 3px 5px;
+  text-align: left;
+  vertical-align: top;
+}
+
+table th {
+  border-top: 0;
+}
