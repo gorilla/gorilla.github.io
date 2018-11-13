@@ -12,21 +12,19 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 
-// +build appengine
-
-package app
+package main
 
 import (
 	"bytes"
-	"doc"
+	"context"
 	"encoding/gob"
+	"github.com/gorilla/site/doc"
+	"google.golang.org/appengine/datastore"
+	"google.golang.org/appengine/log"
+	"google.golang.org/appengine/memcache"
 	"path"
 	"strings"
 	"time"
-
-	"appengine"
-	"appengine/datastore"
-	"appengine/memcache"
 )
 
 const (
@@ -52,9 +50,9 @@ type Doc struct {
 	Gob     []byte `datastore:",noindex"`
 }
 
-func loadDoc(c appengine.Context, importPath string) (*doc.Package, string, error) {
+func loadDoc(ctx context.Context, importPath string) (*doc.Package, string, error) {
 	var d Doc
-	err := datastore.Get(c, datastore.NewKey(c, "Doc", importPath, 0, nil), &d)
+	err := datastore.Get(ctx, datastore.NewKey(ctx, "Doc", importPath, 0, nil), &d)
 	if err == datastore.ErrNoSuchEntity {
 		return nil, "", nil
 	}
@@ -69,18 +67,18 @@ func loadDoc(c appengine.Context, importPath string) (*doc.Package, string, erro
 	return &p, p.Etag, err
 }
 
-func removeDoc(c appengine.Context, importPath string) {
-	err := datastore.Delete(c, datastore.NewKey(c, "Doc", importPath, 0, nil))
+func removeDoc(ctx context.Context, importPath string) {
+	err := datastore.Delete(ctx, datastore.NewKey(ctx, "Doc", importPath, 0, nil))
 	if err != nil && err != datastore.ErrNoSuchEntity {
-		c.Errorf("Delete(%s) -> %v", importPath, err)
+		log.Errorf(ctx, "Delete(%s) -> %v", importPath, err)
 	}
 }
 
-func queryPackages(c appengine.Context, cacheKey string, query *datastore.Query) ([]*Package, error) {
+func queryPackages(ctx context.Context, cacheKey string, query *datastore.Query) ([]*Package, error) {
 	var pkgs []*Package
-	item, err := cacheGet(c, cacheKey, &pkgs)
+	item, err := cacheGet(ctx, cacheKey, &pkgs)
 	if err == memcache.ErrCacheMiss {
-		keys, err := query.GetAll(c, &pkgs)
+		keys, err := query.GetAll(ctx, &pkgs)
 		if err != nil {
 			return nil, err
 		}
@@ -94,7 +92,7 @@ func queryPackages(c appengine.Context, cacheKey string, query *datastore.Query)
 		}
 		item.Expiration = time.Hour
 		item.Object = pkgs
-		if err := cacheSafeSet(c, item); err != nil {
+		if err := cacheSafeSet(ctx, item); err != nil {
 			return nil, err
 		}
 	} else if err != nil {
@@ -126,7 +124,7 @@ func (pkg *Package) equal(other *Package) bool {
 
 // updatePackage updates the package in the datastore and clears memcache as
 // needed.
-func updatePackage(c appengine.Context, importPath string, pdoc *doc.Package) error {
+func updatePackage(ctx context.Context, importPath string, pdoc *doc.Package) error {
 
 	var pkg *Package
 	if pdoc != nil && pdoc.Name != "" {
@@ -176,10 +174,10 @@ func updatePackage(c appengine.Context, importPath string, pdoc *doc.Package) er
 
 	// Update doc blob.
 
-	key := datastore.NewKey(c, "Doc", importPath, 0, nil)
+	key := datastore.NewKey(ctx, "Doc", importPath, 0, nil)
 	if pkg == nil {
-		if err := datastore.Delete(c, key); err != datastore.ErrNoSuchEntity && err != nil {
-			c.Errorf("Delete(%s) -> %v", importPath, err)
+		if err := datastore.Delete(ctx, key); err != datastore.ErrNoSuchEntity && err != nil {
+			log.Errorf(ctx, "Delete(%s) -> %v", importPath, err)
 		}
 	} else {
 		var buf bytes.Buffer
@@ -205,8 +203,8 @@ func updatePackage(c appengine.Context, importPath string, pdoc *doc.Package) er
 			Version: doc.PackageVersion,
 			Gob:     buf.Bytes(),
 		}
-		if _, err := datastore.Put(c, key, &doc); err != nil {
-			c.Errorf("Put(%s) -> %v", importPath, err)
+		if _, err := datastore.Put(ctx, key, &doc); err != nil {
+			log.Errorf(ctx, "Put(%s) -> %v", importPath, err)
 		}
 	}
 
@@ -221,34 +219,34 @@ func updatePackage(c appengine.Context, importPath string, pdoc *doc.Package) er
 	}
 
 	var invalidateCache bool
-	key = datastore.NewKey(c, "Package", keyName, 0, nil)
+	key = datastore.NewKey(ctx, "Package", keyName, 0, nil)
 	var storedPackage Package
-	err := datastore.Get(c, key, &storedPackage)
+	err := datastore.Get(ctx, key, &storedPackage)
 	switch err {
 	case datastore.ErrNoSuchEntity:
 		if pkg != nil {
 			invalidateCache = true
-			c.Infof("Adding package %s", importPath)
-			if _, err := datastore.Put(c, key, pkg); err != nil {
-				c.Errorf("Put(%s) -> %v", importPath, err)
+			log.Infof(ctx, "Adding package %s", importPath)
+			if _, err := datastore.Put(ctx, key, pkg); err != nil {
+				log.Errorf(ctx, "Put(%s) -> %v", importPath, err)
 			}
 		}
 	case nil:
 		if pkg == nil {
 			invalidateCache = true
-			c.Infof("Deleting package %s", importPath)
-			if err := datastore.Delete(c, key); err != datastore.ErrNoSuchEntity && err != nil {
-				c.Errorf("Delete(%s) -> %v", importPath, err)
+			log.Infof(ctx, "Deleting package %s", importPath)
+			if err := datastore.Delete(ctx, key); err != datastore.ErrNoSuchEntity && err != nil {
+				log.Errorf(ctx, "Delete(%s) -> %v", importPath, err)
 			}
 		} else if !pkg.equal(&storedPackage) {
 			invalidateCache = true
-			c.Infof("Updating package %s", importPath)
-			if _, err := datastore.Put(c, key, pkg); err != nil {
-				c.Errorf("Put(%s) -> %v", importPath, err)
+			log.Infof(ctx, "Updating package %s", importPath)
+			if _, err := datastore.Put(ctx, key, pkg); err != nil {
+				log.Errorf(ctx, "Put(%s) -> %v", importPath, err)
 			}
 		}
 	default:
-		c.Errorf("Get(%s) -> %v", importPath, err)
+		log.Errorf(ctx, "Get(%s) -> %v", importPath, err)
 	}
 
 	// Update memcache.
@@ -258,7 +256,7 @@ func updatePackage(c appengine.Context, importPath string, pdoc *doc.Package) er
 		if pdoc != nil {
 			keys = append(keys, projectListKeyPrefix+pdoc.ProjectRoot)
 		}
-		if err = cacheClear(c, keys...); err != nil {
+		if err = cacheClear(ctx, keys...); err != nil {
 			return err
 		}
 	}

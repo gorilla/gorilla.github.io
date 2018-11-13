@@ -12,15 +12,13 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 
-// +build appengine
-
-package app
+package main
 
 import (
 	"bytes"
-	"doc"
 	"errors"
 	"fmt"
+	"github.com/gorilla/site/doc"
 	godoc "go/doc"
 	"net/http"
 	"net/url"

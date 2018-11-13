@@ -1,7 +1,4 @@
-application: gorilla-web
-version: v2
-runtime: go
-api_version: go1
+runtime: go111
 
 handlers:
 - url: /(robots\.txt|favicon\.ico)
