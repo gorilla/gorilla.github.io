@@ -517,7 +517,7 @@ type Package struct {
 	// Project home page.
 	ProjectURL string
 
-	// Errors found when fetching or parsing this package. 
+	// Errors found when fetching or parsing this package.
 	Errors []string
 
 	// The time this object was created.

@@ -12,20 +12,18 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 
-// +build appengine
-
-package app
+package main
 
 import (
-	"appengine"
-	"appengine/memcache"
 	"bytes"
+	"context"
 	"encoding/gob"
+	"google.golang.org/appengine/memcache"
 	"time"
 )
 
-func cacheGet(c appengine.Context, key string, object interface{}) (*memcache.Item, error) {
-	item, err := memcache.Get(c, key)
+func cacheGet(ctx context.Context, key string, object interface{}) (*memcache.Item, error) {
+	item, err := memcache.Get(ctx, key)
 	switch {
 	case err != nil:
 		item = &memcache.Item{Key: key}
@@ -38,17 +36,17 @@ func cacheGet(c appengine.Context, key string, object interface{}) (*memcache.It
 	return item, err
 }
 
-func cacheSet(c appengine.Context, item *memcache.Item) error {
+func cacheSet(ctx context.Context, item *memcache.Item) error {
 	var buf bytes.Buffer
 	err := gob.NewEncoder(&buf).Encode(item.Object)
 	if err != nil {
 		return err
 	}
 	item.Value = buf.Bytes()
-	return memcache.Set(c, item)
+	return memcache.Set(ctx, item)
 }
 
-func cacheSafeSet(c appengine.Context, item *memcache.Item) error {
+func cacheSafeSet(ctx context.Context, item *memcache.Item) error {
 	var buf bytes.Buffer
 	err := gob.NewEncoder(&buf).Encode(item.Object)
 	if err != nil {
@@ -59,7 +57,7 @@ func cacheSafeSet(c appengine.Context, item *memcache.Item) error {
 	item.Value = buf.Bytes()
 
 	if swap {
-		err = memcache.CompareAndSwap(c, item)
+		err = memcache.CompareAndSwap(ctx, item)
 		switch err {
 		case memcache.ErrCASConflict:
 			// OK, cache item set by another request
@@ -71,7 +69,7 @@ func cacheSafeSet(c appengine.Context, item *memcache.Item) error {
 		}
 	}
 
-	err = memcache.Add(c, item)
+	err = memcache.Add(ctx, item)
 	if err == memcache.ErrNotStored {
 		// OK, cache item set by another request
 		err = nil
@@ -79,10 +77,10 @@ func cacheSafeSet(c appengine.Context, item *memcache.Item) error {
 	return err
 }
 
-func cacheClear(c appengine.Context, keys ...string) error {
+func cacheClear(ctx context.Context, keys ...string) error {
 	items := make([]*memcache.Item, len(keys))
 	for i := range keys {
 		items[i] = &memcache.Item{Key: keys[i], Expiration: 2 * time.Minute, Value: []byte{0}}
 	}
-	return memcache.SetMulti(c, items)
+	return memcache.SetMulti(ctx, items)
 }

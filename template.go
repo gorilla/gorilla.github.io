@@ -12,15 +12,13 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 
-// +build appengine
-
-package app
+package main
 
 import (
 	"bytes"
-	"doc"
 	"errors"
 	"fmt"
+	"github.com/gorilla/site/doc"
 	godoc "go/doc"
 	"net/http"
 	"net/url"
@@ -181,25 +179,25 @@ func executeTemplate(w http.ResponseWriter, name string, status int, data interf
 // any of the remaining arguments.
 // https://groups.google.com/group/golang-nuts/msg/a720bf35f454288b
 func eq(args ...interface{}) bool {
-		if len(args) == 0 {
-				return false
-		}
-		x := args[0]
-		switch x := x.(type) {
-		case string, int, int64, byte, float32, float64:
-				for _, y := range args[1:] {
-						if x == y {
-								return true
-						}
-				}
-				return false
-		}
+	if len(args) == 0 {
+		return false
+	}
+	x := args[0]
+	switch x := x.(type) {
+	case string, int, int64, byte, float32, float64:
 		for _, y := range args[1:] {
-				if reflect.DeepEqual(x, y) {
-						return true
-				}
+			if x == y {
+				return true
+			}
 		}
 		return false
+	}
+	for _, y := range args[1:] {
+		if reflect.DeepEqual(x, y) {
+			return true
+		}
+	}
+	return false
 }
 
 var tpls = map[string]*template.Template{

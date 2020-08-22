@@ -110,7 +110,7 @@ func httpGetBytes(client *http.Client, url string) ([]byte, error) {
 
 // httpGetBytesNoneMatch conditionally gets the specified resource. If a 304 status
 // is returned, then the function returns ErrPackageNotModified. If a 404
-// status is returned, then the function returns ErrPackageNotFound. 
+// status is returned, then the function returns ErrPackageNotFound.
 func httpGetBytesNoneMatch(client *http.Client, url string, etag string) ([]byte, string, error) {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -141,7 +141,6 @@ func httpGetBytesNoneMatch(client *http.Client, url string, etag string) ([]byte
 	default:
 		return nil, "", GetError{req.URL.Host, fmt.Errorf("get %s -> %d", url, resp.StatusCode)}
 	}
-	panic("unreachable")
 }
 
 // httpGet gets the specified resource. ErrPackageNotFound is returned if the
