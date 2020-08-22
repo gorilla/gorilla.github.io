@@ -1,4 +1,4 @@
-runtime: go111
+runtime: go113
 
 handlers:
 - url: /(robots\.txt|favicon\.ico)
