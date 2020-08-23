@@ -3,6 +3,11 @@ package main
 import (
 	"context"
 	"fmt"
+	"net/http"
+	"os"
+	"strings"
+	"time"
+
 	"github.com/gorilla/mux"
 	"github.com/gorilla/site/doc"
 	"google.golang.org/appengine"
@@ -10,13 +15,12 @@ import (
 	"google.golang.org/appengine/log"
 	"google.golang.org/appengine/memcache"
 	"google.golang.org/appengine/urlfetch"
-	"net/http"
-	"strings"
-	"time"
 )
 
 const (
-	docKeyPrefix = "doc-" + doc.PackageVersion + ":"
+	configuredHost = "www.gorillatoolkit.org"
+	defaultPort    = "8080"
+	docKeyPrefix   = "doc-" + doc.PackageVersion + ":"
 )
 
 func filterCmds(in []*Package) (out []*Package, cmds []*Package) {
@@ -131,15 +135,14 @@ func getDoc(c context.Context, importPath string) (*doc.Package, []*Package, err
 type handlerFunc func(http.ResponseWriter, *http.Request) error
 
 func (f handlerFunc) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if r.Host != "www.gorillatoolkit.org" && !appengine.IsDevAppServer() {
-		r.URL.Host = "www.gorillatoolkit.org"
+	if r.Host != configuredHost && !appengine.IsDevAppServer() {
+		r.URL.Host = configuredHost
 		http.Redirect(w, r, r.URL.String(), 301)
 		return
 	}
 
 	err := f(w, r)
 	if err != nil {
-		log.Errorf(appengine.NewContext(r), "Error %s", err.Error())
 		if e, ok := err.(doc.GetError); ok {
 			http.Error(w, "Error getting files from "+e.Host+".", http.StatusInternalServerError)
 		} else if appengine.IsOverQuota(err) {
@@ -229,6 +232,11 @@ func fullImportPath(importPath string) string {
 }
 
 func main() {
+	var port string
+	if port = os.Getenv("PORT"); port == "" {
+		port = defaultPort
+	}
+
 	r := mux.NewRouter()
 
 	packageGorillaHandler := func(w http.ResponseWriter, req *http.Request) error {
@@ -251,7 +259,8 @@ func main() {
 	r.Handle("/src/{file:.*}", handlerFunc(sourceHandler))
 	r.Handle("/{path:.*}", handlerFunc(notFoundHandler))
 
-	if err := http.ListenAndServe(":8080", r); err != nil {
+	if err := http.ListenAndServe(
+		fmt.Sprintf(":%s", port), r); err != nil {
 		if appengine.IsAppEngine() {
 			log.Errorf(context.Background(), "Error: %v", err.Error())
 		} else {
