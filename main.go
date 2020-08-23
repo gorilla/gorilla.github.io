@@ -259,11 +259,11 @@ func main() {
 	r.Handle("/src/{file:.*}", handlerFunc(sourceHandler))
 	r.Handle("/{path:.*}", handlerFunc(notFoundHandler))
 
-	if err := http.ListenAndServe(
-		fmt.Sprintf(":%s", port), r); err != nil {
-		if appengine.IsAppEngine() {
-			log.Errorf(context.Background(), "Error: %v", err.Error())
-		} else {
+	if appengine.IsAppEngine() {
+		http.Handle("/", r)
+		appengine.Main()
+	} else {
+		if err := http.ListenAndServe(fmt.Sprintf(":%s", port), r); err != nil {
 			fmt.Printf("Error: %v", err.Error())
 		}
 	}
