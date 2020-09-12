@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"net/url"
 	"os"
 	"strings"
 	"time"
@@ -21,6 +22,7 @@ const (
 	configuredHost = "www.gorillatoolkit.org"
 	defaultPort    = "8080"
 	docKeyPrefix   = "doc-" + doc.PackageVersion + ":"
+	githubURL      = "https://github.com/gorilla"
 )
 
 func filterCmds(in []*Package) (out []*Package, cmds []*Package) {
@@ -164,23 +166,19 @@ func homeHandler(w http.ResponseWriter, r *http.Request) error {
 }
 
 func peopleHandler(w http.ResponseWriter, r *http.Request) error {
-	return executeTemplate(w, "people", 200, map[string]interface{}{
-		"Section": "people",
-	})
+	http.Redirect(
+		w, r, "https://github.com/orgs/gorilla/people", http.StatusPermanentRedirect,
+	)
+
+	return nil
 }
 
 func packageIndexHandler(w http.ResponseWriter, r *http.Request) error {
-	c := appengine.NewContext(r)
-	pkgs, err := queryPackages(c, packageListKey, datastore.NewQuery("Package").Filter("Hide=", false))
-	if err != nil {
-		return err
-	}
-	pkgs, cmds := filterCmds(pkgs)
-	return executeTemplate(w, "pkgIndex", 200, map[string]interface{}{
-		"Section": "pkg",
-		"pkgs":    pkgs,
-		"cmds":    cmds,
-	})
+	http.Redirect(
+		w, r, "https://github.com/gorilla", http.StatusPermanentRedirect,
+	)
+
+	return nil
 }
 
 func packageHandler(w http.ResponseWriter, r *http.Request) error {
@@ -239,13 +237,18 @@ func main() {
 
 	r := mux.NewRouter()
 
-	packageGorillaHandler := func(w http.ResponseWriter, req *http.Request) error {
+	redirectToRepo := func(w http.ResponseWriter, req *http.Request) error {
 		vars := mux.Vars(req)
-		u, err := r.Get("package").URL("package", vars["package"])
+		packageName := vars["package"]
+
+		u, err := url.Parse(
+			fmt.Sprintf("%s/%s", githubURL, packageName))
 		if err != nil {
 			return err
 		}
-		http.Redirect(w, req, u.String(), 301)
+
+		http.Redirect(
+			w, req, u.String(), http.StatusPermanentRedirect)
 		return nil
 	}
 
@@ -253,11 +256,11 @@ func main() {
 	r.Handle("/", handlerFunc(homeHandler))
 	r.Handle("/people", handlerFunc(peopleHandler))
 	r.Handle("/pkg/", handlerFunc(packageIndexHandler))
-	r.Handle("/pkg/gorilla/{package:.*}", handlerFunc(packageGorillaHandler))
-	r.Handle("/pkg/{package:.*}", handlerFunc(packageHandler)).Name("package")
+	// r.Handle("/pkg/gorilla/{package:.*}", handlerFunc(packageGorillaHandler))
+	r.Handle("/pkg/{package:.*}", handlerFunc(redirectToRepo)).Name("package")
 	r.Handle("/src/", handlerFunc(sourceIndexHandler))
-	r.Handle("/src/{file:.*}", handlerFunc(sourceHandler))
-	r.Handle("/{path:.*}", handlerFunc(notFoundHandler))
+	//r.Handle("/src/{file:.*}", handlerFunc(sourceHandler))
+	r.NotFoundHandler = handlerFunc(notFoundHandler)
 
 	if appengine.IsAppEngine() {
 		http.Handle("/", r)
