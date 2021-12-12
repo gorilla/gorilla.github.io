@@ -16,3 +16,11 @@ handlers:
   script: auto
   secure: always
   redirect_http_response_code: 301
+
+automatic_scaling:
+  min_instances: 0
+  max_instances: 1
+  min_idle_instances: automatic
+  max_idle_instances: automatic
+  min_pending_latency: automatic
+  max_pending_latency: automatic
