@@ -1,0 +1,4 @@
+baseURL = 'https://gorilla.github.io/'
+languageCode = 'en-us'
+title = 'Gorilla web toolkit'
+theme = 'gorillawebtoolkit'
