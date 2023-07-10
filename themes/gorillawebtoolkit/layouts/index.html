@@ -1,0 +1,62 @@
+{{ define "main" }}
+<div role="main" class="main">
+
+	<p>Gorilla is a web toolkit for the <a href="http://golang.org/">Go programming language</a>. Currently these packages are available:</p>
+	<ul>
+		<li><a href="/pkg/mux" target="_blank">gorilla/mux</a> is a powerful URL router and dispatcher.</li>
+		<li><a href="/pkg/reverse" target="_blank">gorilla/reverse</a> produces reversible regular expressions for regexp-based muxes.</li>
+		<li><a href="/pkg/rpc" target="_blank">gorilla/rpc</a> implements RPC over HTTP with codec for <a href="https://www.jsonrpc.org/" target="_blank">JSON-RPC</a>.</li>
+		<li><a href="/pkg/schema" target="_blank">gorilla/schema</a> converts form values to a struct.</li>
+		<li><a href="/pkg/securecookie" target="_blank">gorilla/securecookie</a> encodes and decodes authenticated and optionally encrypted cookie values.</li>
+		<li><a href="/pkg/sessions" target="_blank">gorilla/sessions</a> saves cookie and filesystem sessions and allows custom session backends.</li>
+		<li><a href="/pkg/websocket" target="_blank">gorilla/websocket</a> implements the WebSocket protocol defined in <a href="http://tools.ietf.org/html/rfc6455" target="_blank">RFC 6455</a>.</li>
+		<li><a href="/pkg/csrf" target="_blank">gorilla/csrf</a> provides Cross Site Request Forgery (CSRF) prevention middleware.</li>
+		<li><a href="/pkg/handlers" target="_blank">gorilla/handlers</a> is a collection of useful handlers for Go's net/http package.</li>
+	</ul>
+
+	<h2>Installation</h2>
+	<p>Run "go get" pointing to a package. For example, to install gorilla/mux:</p>
+	<pre>$ go get github.com/gorilla/mux</pre>
+	<p>Or clone a <a href="https://github.com/gorilla/" target="_blank">repository</a> and use the source code directly:</p>
+	<pre>$ git clone https://github.com/gorilla/mux.git</pre>
+
+	<p>For Google App Engine, create a directory tree inside your app and clone the repository there:</p>
+	<pre>$ cd myapp
+$ mkdir -p github.com/gorilla
+$ cd github.com/gorilla
+$ git clone https://github.com/gorilla/mux.git</pre>
+
+	<h2>Community</h2>
+	<p>Join the <a href="http://groups.google.com/group/gorilla-web" target="_blank">gorilla-web mailing list</a>.</p>
+
+
+	<h2>FAQ</h2>
+	<p>
+		<strong>Q:</strong> Is Gorilla a framework?<br>
+		<strong>A:</strong> No, it is a toolkit. Just use what you need with your favorite framework or the http package.
+	</p>
+	<p>
+		<strong>Q:</strong> Why the name Gorilla?<br>
+		<strong>A:</strong> Because it starts with "Go". Also, we want to raise awareness about endangered primates.
+	</p>
+	<p>
+		<strong>Q:</strong> Can I buy a fluffy toy of that tiny cute gorilla from your logo?<br>
+		<strong>A:</strong> Not yet.
+	</p>
+
+	<h2>Testimonials</h2>
+	<p>
+		<em>"Gorilla is fresh and tidy. It's like wearing recently washed underpants."</em> -- Geekoid, on Hacker News
+	</p>
+	<p>
+		<em>"I wish Gorilla was written in Haskell."</em> -- Rasmus Jørgensen, Haskell developer
+	</p>
+	<p>
+		<em>"Come on... what's next? Goldfish? Goat? Goose?!?"</em> -- AnonymousCoward, on Reddit
+	</p>
+
+	<h2>License</h2>
+	<p>Gorilla is licensed under <a href="https://opensource.org/license/bsd-3-clause/">The 3-Clause BSD License</a>.</p>
+
+</div>
+{{ end }}
