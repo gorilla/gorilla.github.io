@@ -1,0 +1,42 @@
+{{- define "main" }}
+<div role="main" class="main">
+	{{- if .Page.Title }}
+	<h1 class="page-title">{{ .Page.Title }}</h1>
+	{{- else if isset .Data "Term" }}
+	<h1 class="page-title">{{ humanize .Data.Term }}</h1>
+	{{- end -}}
+	{{ .Content }}
+	<div class="container px-4 py-2" id="packages-grid">
+		<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 g-3 py-3 text-light">
+			{{- range .Data.Pages }}
+			{{- if (in .Site.Params.excludedTypes .Type) }}
+			{{- else }}
+			<div class="col d-flex align-items-start">
+				<div class="border border-1 rounded p-2 bg-dark h-100 position-relative">
+					<div class="post-header">
+						<div class="meta">
+							<div class="date">
+								<span class="day">{{ dateFormat "02" .Date }}</span>
+								<span class="rest">{{ if $.Site.Data.month }}{{ index $.Site.Data.month (printf "%d" .Date.Month) }} {{ .Date.Year }}{{ else }}{{ dateFormat "Jan 2006" .Date }}{{ end }}</span>
+							</div>
+						</div>
+						<div class="matter">
+							<article>
+								<h3>{{.Title}}{{ partial "post_label.html" (dict "post" .)}}</h3>
+								<span class="description">{{ if isset .Params "description" }}{{ .Description }}{{ else }}{{ .Plain | htmlUnescape | safeHTML | truncate 250 }}{{ end }}</span>
+							</article>
+						</div>
+					</div>
+					<div class="text-end">
+						<a href="{{ .RelPermalink }}" target="_blank" class="btn btn-warning btn-sm">
+							Read More
+						</a>
+					</div>
+				</div>
+			</div>
+			{{- end }}
+			{{- end }}
+		</div>
+	</div>
+</div>
+{{- end }}
