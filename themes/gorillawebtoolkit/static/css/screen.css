@@ -1,23 +1,8 @@
 @import url(https://fonts.googleapis.com/css?family=Paytone+One|PT+Sans:400,700,400italic);
 
 body {
-	background: #1a1a1a;
-	color: #ccc;
 	font-family: "PT Sans", helvetica, arial, sans-serif;
-	font-size: 16px;
-	font-weight: 400;
-	margin: 0;
-	padding: 0
-}
-
-a:link,
-a:visited {
-	color: #9df
-}
-
-a:active,
-a:hover {
-	color: #6cf
+	font-size: 1em;
 }
 
 em {
@@ -35,126 +20,62 @@ section {
 	display: block
 }
 
-header {
-	margin: 0 auto;
-	padding: 0;
-	text-align: center;
-	width: 740px
+nav.navbar {
+	background-color: #1a1a1a !important;
 }
 
-header h1 {
-	display: inline-block;
-	*display: inline;
-	background: transparent url(/img/gorilla-icon-64.png) no-repeat 0 10px;
+nav.navbar a,
+nav.navbar a:link,
+nav.navbar a:active,
+nav.navbar a:visited {
+	font-family: "Paytone One", sans-serif;
+	color: #fb0;
+}
+
+a.navbar-brand {
 	color: #fb0;
 	font-family: "Paytone One", sans-serif;
-	font-size: 64px;
+	font-size: 3em;
 	font-weight: 400;
-	line-height: 1em;
-	margin: 0;
-	padding: 0 0 20px 74px;
-	zoom: 1;
-	text-shadow: #080808 -3px 3px 0
 }
 
-header h1 a:link,
-header h1 a:visited {
-	text-decoration: none;
-	color: #fb0
-}
-
-header h1 a:hover,
-header h1 a:active {
-	color: #ffc933
-}
-
-header h1 a:link span,
-header h1 a:visited span {
-	color: #ccc
-}
-
-header h1 a:hover span,
-header h1 a:active span {
+a.navbar-brand span {
 	color: #e6e6e6
 }
 
-header nav ul {
-	border-top: 3px solid #333;
-	font-size: 14px;
-	margin: 0 0 25px;
-	text-align: right;
-	text-transform: lowercase
+li.nav-item a {
+	font-size: 1.5em;
 }
 
-header nav li {
-	display: inline-block;
-	*display: inline;
-	margin: 0 0 0 3px;
-	padding: 0;
-	zoom: 1
+li.nav-item a:hover {
+	color: #e6e6e6;
 }
 
-header nav li a {
-	display: inline-block;
-	*display: inline;
-	zoom: 1
+.btn-warning {
+	font-weight: 700;
 }
 
-header nav a:link,
-header nav a:visited {
-	background: #262626;
-	color: gray;
-	padding: 7px;
-	text-decoration: none;
-	-moz-border-radius: 0 0 3px 3px;
-	-webkit-border-radius: 0 0 3px 3px;
-	-o-border-radius: 0 0 3px 3px;
-	-ms-border-radius: 0 0 3px 3px;
-	-khtml-border-radius: 0 0 3px 3px;
-	border-radius: 0 0 3px 3px
+a.btn-warning:hover {
+	background-color: #e6e6e6;
+	border-color: #e6e6e6;
 }
 
-header nav a:hover,
-header nav a:active,
-header nav li.active a {
-	color: #ccc;
-	background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #333333), color-stop(100%, #666666));
-	background-image: -webkit-linear-gradient(#333333, #666666);
-	background-image: -moz-linear-gradient(#333333, #666666);
-	background-image: -o-linear-gradient(#333333, #666666);
-	background-image: -ms-linear-gradient(#333333, #666666);
-	background-image: linear-gradient(#333333, #666666)
-}
-
-.main {
-	line-height: 1.6em;
-	width: 740px;
-	margin: 0 auto
-}
-
-.main h1,
-.main h2,
-.main h3,
-.main h4 {
+h1,
+h2,
+h3,
+h4 {
 	color: #fb0;
 	font-family: "Paytone One", sans-serif;
 	font-weight: 400;
-	text-shadow: #080808 -2px 2px 0
-}
-
-.main h2 {
-	border-top: 1px dashed #333;
-	padding-top: 12px
 }
 
 footer {
 	color: gray;
-	border-top: 3px solid #333;
+	border-top: 1px solid #333;
 	font-size: 13px;
 	margin: 25px auto;
 	padding: 0;
 	text-align: center;
-	width: 740px
 }
 
 .error {
@@ -171,7 +92,6 @@ footer {
 	line-height: 1em;
 	margin: 0;
 	padding: 0;
-	text-shadow: #080808 -3px 3px 0
 }
 
 code,
@@ -193,7 +113,6 @@ pre {
 
 code {
 	display: inline-block;
-	*display: inline;
 	zoom: 1
 }
 
@@ -289,7 +208,7 @@ table.layout td {
 	font-weight: 400 !important;
 	float: right;
 	text-decoration: none;
-	text-shadow: none
+
 }
 
 .navtop a:hover {
@@ -308,7 +227,6 @@ table.layout td {
 	border-top: 1px dashed #333;
 	font-family: "Consolas", "Deja Vu Sans Mono", "Lucida Console", "Bitstream Vera Sans Mono", monospace;
 	padding-top: 16px;
-	text-shadow: #080808 -2px 2px 0
 }
 
 table td,
@@ -321,4 +239,179 @@ table th {
 
 table th {
 	border-top: 0
+}
+
+
+.recent-posts .posts .post {
+	margin-bottom: 45px;
+}
+
+.flat .post {
+	margin-bottom: 45px;
+}
+
+.post-header {
+	display: flex;
+}
+
+.post-header .meta .date {
+	margin-right: 19px;
+	width: 75px;
+	text-align: center;
+}
+
+.post-header .meta .date .day {
+	color: #e6e6e6;
+	font-family: "Paytone One", sans-serif;
+	font-weight: 700;
+	line-height: 0.45em;
+	font-size: 3em;
+	display: block;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.post-header .meta .date .rest {
+	display: block;
+	font-size: 0.80em;
+	font-family: "Roboto Slab Regular", serif;
+	font-weight: 700;
+}
+
+.post-header h3 a {
+	color: #fb0;
+	font-family: "Paytone One", sans-serif;
+	text-decoration: none;
+}
+
+.markdown {
+	overflow: hidden;
+}
+
+.post .draft-label {
+	color: var(--bq-color);
+	text-decoration: underline;
+	padding: 2px 4px;
+	margin-left: 6px;
+	font-size: 1.4rem;
+}
+
+.post .tags a {
+	display: inline-block;
+	border: 1px solid;
+	border-radius: 3px;
+	padding: 0px 6px;
+	line-height: 20px;
+	font-size: 0.85em;
+	text-decoration: none;
+	margin: 0 10px 0 0;
+}
+
+.tags p {
+	margin: 10px 0 10px 0;
+}
+
+.post .tags a:hover {
+	border: 1px solid var(--bg-color);
+}
+
+.post ul li {
+	margin-bottom: 10px;
+}
+
+.post ul li p {
+	display: inline;
+}
+
+.list .posts .post-header .meta {
+	margin-bottom: 0;
+}
+
+.post-meta {
+	color: var(--hover-color);
+	font-size: 14px;
+	font-style: italic;
+	margin: 0 0 10px;
+}
+
+.description {
+	margin: 0;
+}
+
+.pagination {
+	margin: 0;
+	padding: 0;
+	text-align: left;
+	display: flex;
+	justify-content: space-between;
+}
+
+.pagination li {
+	list-style: none;
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+}
+
+.pagination .page-prev {
+	margin-right: 20px;
+	padding-right: 20px;
+}
+
+.pagination .page-item.page-prev {
+	text-align: left;
+}
+
+.pagination .page-item.page-next {
+	text-align: right;
+}
+
+.page-title {
+	font-weight: bold;
+	font-family: "Roboto Slab Regular", serif;
+	margin: -10px 0 30px 0;
+}
+
+.tag-cloud {
+	margin-top: 20px;
+	line-height: normal;
+	text-align: center;
+}
+
+.tag-cloud a {
+	margin-right: 15px;
+}
+
+.author {
+	font-size: 1.2rem;
+	margin-bottom: 10px;
+}
+
+.tags {
+	text-align: center;
+	padding: 5px 0 5px 0;
+}
+
+.clearit {
+	clear: both;
+}
+
+.termsfloating_right {
+	float: right;
+	width: 80%;
+}
+
+.taxosfloating_left {
+	float: left;
+	width: 20%;
+}
+
+ul.flat {
+	margin: 0;
+	padding: 0;
+}
+
+ul.flat li {
+	list-style: none;
+	margin-left: 0;
 }
